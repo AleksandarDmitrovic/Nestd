@@ -67,11 +67,12 @@ Nestd is a financial tracker app that helps Canadian couples and families view t
 The app will allow account holders to grant read-only access to their family members' retirement account data and display that info on a dashboard. The app's main features will enable users to set retirement goals and calculate their future accounts' value in today's dollars.
 
 Project Drafts
-<img src="./images/dashboard-draft.png" alt="Logo" width="80" height="80">
-<img src="./images/accounts-draft.png" alt="Logo" width="80" height="80">
-<img src="./images/goal-calc-draft.png" alt="Logo" width="80" height="80">
-<img src="./images/progress-draft.png" alt="Logo" width="80" height="80">
-<img src="./images/settings-draft.png" alt="Logo" width="80" height="80">
+<br/>
+<img src="./images/dashboard-draft.png" alt="Logo" width="150" height="300">
+<img src="./images/accounts-draft.png" alt="Logo" width="150" height="300">
+<img src="./images/goal-calc-draft.png" alt="Logo" width="150" height="300">
+<img src="./images/progress-draft.png" alt="Logo" width="150" height="300">
+<img src="./images/settings-draft.png" alt="Logo" width="150" height="300">
 
 Here's a blank template to get started. To avoid retyping too much info, do a search and replace with your text editor for the following: `github_username`, `repo_name`, `twitter_handle`, `linkedin_username`, `email_client`, `email`, `project_title`, `project_description`, `project_license`
 
