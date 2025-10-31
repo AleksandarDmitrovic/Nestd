@@ -66,7 +66,7 @@ Nestd is a financial tracker app that helps Canadian couples and families view t
 
 The app will allow account holders to grant read-only access to their family members' retirement account data and display that info on a dashboard. The app's main features will enable users to set retirement goals and calculate their future accounts' value in today's dollars.
 
-Project Drafts
+Project Wire-frames
 <br/>
 <img src="./images/dashboard-draft.png" alt="Logo" width="150" height="300">
 <img src="./images/accounts-draft.png" alt="Logo" width="150" height="300">
@@ -80,14 +80,11 @@ Here's a blank template to get started. To avoid retyping too much info, do a se
 
 ### Built With
 
-- [![Next][Next.js]][Next-url]
+- [![Vite][Vite]][Vite-url]
+- [![MongoDB][MongoDB]][MongoDB-url]
+- [![Express][Express]][Express-url]
 - [![React][React.js]][React-url]
-- [![Vue][Vue.js]][Vue-url]
-- [![Angular][Angular.io]][Angular-url]
-- [![Svelte][Svelte.dev]][Svelte-url]
-- [![Laravel][Laravel.com]][Laravel-url]
-- [![Bootstrap][Bootstrap.com]][Bootstrap-url]
-- [![JQuery][JQuery.com]][JQuery-url]
+- [![Node][Node]][Node-url]
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -239,3 +236,11 @@ Project Link: [https://github.com/github_username/repo_name](https://github.com/
 [Bootstrap-url]: https://getbootstrap.com
 [JQuery.com]: https://img.shields.io/badge/jQuery-0769AD?style=for-the-badge&logo=jquery&logoColor=white
 [JQuery-url]: https://jquery.com
+[Vite]: https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=vite&logoColor=ffd931
+[Vite-url]: https://vite.dev/
+[MongoDB]: https://img.shields.io/badge/MongoDB-35495E?style=for-the-badge&logo=mongodb&logoColor=47A248
+[MongoDB-url]: https://www.mongodb.com/
+[Express]: https://img.shields.io/badge/Express-0769AD?style=for-the-badge&logo=express&logoColor=fff
+[Express-url]: https://expressjs.com/
+[Node]: https://img.shields.io/badge/Node.js-%235FA04E?style=for-the-badge&logo=nodedotjs&logoColor=fff
+[Node-url]: https://nodejs.org/
