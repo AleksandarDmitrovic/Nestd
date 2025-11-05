@@ -1,13 +1,13 @@
-import PropTypes from "prop-types";
+import styles from "./Dashboard.module.css";
 
-const Dashboard = (props) => {
+const Dashboard = () => {
   return (
     <>
-      <header></header>
+      <header className={styles.header}>
+        <h1 className={styles.title}>Nestd</h1>
+      </header>
     </>
   );
 };
-
-Dashboard.propTypes = {};
 
 export default Dashboard;

@@ -16,6 +16,7 @@ body {
   flex-wrap: wrap;
   align-content: start;
   height: 100vh;
+  overflow: auto;
   margin: 1rem;
 }
 /* #root {

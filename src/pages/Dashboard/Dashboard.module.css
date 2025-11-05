@@ -1,0 +1,12 @@
+.header {
+  border-bottom: 0.025rem solid lightgray;
+  inline-size: 100vw;
+}
+
+.title {
+  background-color: #11b981;
+  padding: 1rem;
+  border-radius: 20px;
+  inline-size: fit-content;
+  margin: 1rem;
+}
