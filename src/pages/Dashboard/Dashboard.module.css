@@ -1,4 +1,7 @@
 .header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   border-bottom: 0.025rem solid lightgray;
   inline-size: 100vw;
 }
