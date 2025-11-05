@@ -13,7 +13,28 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-a {
+*,
+*::after,
+*::before {
+  margin: 0;
+  padding: 0;
+  box-sizing: inherit;
+}
+
+body {
+  box-sizing: border-box;
+  font-family: system-ui;
+}
+
+#root {
+  display: flex;
+  flex-wrap: wrap;
+  align-content: start;
+  height: calc(100vh - 2rem);
+  overflow: auto;
+  margin: 1rem;
+}
+/* a {
   font-weight: 500;
   color: #646cff;
   text-decoration: inherit;
@@ -28,6 +49,7 @@ body {
   place-items: center;
   min-width: 320px;
   min-height: 100vh;
+  overflow: hidden;
 }
 
 h1 {
@@ -65,4 +87,4 @@ button:focus-visible {
   button {
     background-color: #f9f9f9;
   }
-}
+} */
