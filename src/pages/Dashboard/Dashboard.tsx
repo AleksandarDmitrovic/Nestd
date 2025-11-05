@@ -23,6 +23,9 @@ const Dashboard = () => {
             In today's dollars: $892K
           </span>
         </div>
+        <div className={styles.chart_container}>
+          <span className={styles.total_title}>Growth Chart</span>
+        </div>
       </main>
     </>
   );
