@@ -123,7 +123,6 @@ This is an example of how to list things you need to use the software and how to
    ```sh
    npm run dev
    ```
-5.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -141,10 +140,13 @@ _For more examples, please refer to the [Documentation](https://example.com)_
 
 ## Roadmap
 
-- [ ] Feature 1
-- [ ] Feature 2
-- [ ] Feature 3
-  - [ ] Nested Feature
+- [ ] Dashboard Overview - Shows total retirement savings, projected value, and values in today's dollars with a growth chart
+- [ ] All Accounts View - Displays individual RRSP, TFSA, and other Canadian retirement accounts for both partners with tabs to switch between family members
+- [ ] Retirement Goal Calculator - Allows users to input their retirement age, desired income, inflation rate, and expected returns to calculate their target amount in today's dollars
+- [ ] Goal Progress View - Shows progress toward retirement goal with current vs. target amounts, both in future dollars and today's dollars (inflation-adjusted)
+- [ ] Retirement Goal Calculator - Allows users to input their retirement age, desired income, inflation rate, and expected returns to calculate their target amount in today's dollars
+- [ ] Settings & Preferences - Key toggle for showing values in today's dollars, inflation/return rate defaults, and account management
+  - [ ] Possible inflation adjusted views shown by default
 
 See the [open issues](https://github.com/github_username/repo_name/issues) for a full list of proposed features (and known issues).
 
