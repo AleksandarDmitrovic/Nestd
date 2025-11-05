@@ -59,3 +59,8 @@ main {
   border-radius: 15px;
   padding: 2rem;
 }
+
+.button {
+  background-color: #11b981;
+  min-inline-size: 50%;
+}

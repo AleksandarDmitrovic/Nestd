@@ -26,6 +26,7 @@ const Dashboard = () => {
         <div className={styles.chart_container}>
           <span className={styles.total_title}>Growth Chart</span>
         </div>
+        <button className={styles.button}>Set Retirement Goal</button>
       </main>
     </>
   );
