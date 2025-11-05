@@ -16,6 +16,13 @@ const Dashboard = () => {
             Combined family accounts
           </span>
         </div>
+        <div className={styles.total_container}>
+          <span className={styles.total_title}>Projected Value at 65</span>
+          <span className={styles.total_value}>$1,200,000</span>
+          <span className={styles.total_subtitle}>
+            In today's dollars: $892K
+          </span>
+        </div>
       </main>
     </>
   );
