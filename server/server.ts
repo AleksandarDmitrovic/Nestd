@@ -8,8 +8,14 @@ const corsOptions = { origin: ["http://localhost:5173"] };
 app.use(cors(corsOptions));
 
 app.get("/api", (req, res) => {
-  res.send("Hello, World!");
-  res.json({ account: "Investment Account" });
+  // res.send("Hello, World!");
+  res.json({
+    accounts: [
+      "Investment Account 1",
+      "Investment Account 2",
+      "Investment Account 3",
+    ],
+  });
 });
 
 app.listen(8080, () => {

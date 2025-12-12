@@ -6,12 +6,12 @@ import axios from "axios";
 
 function App() {
   const [count, setCount] = useState(0);
+  const [accounts, setAccounts] = useState<string[]>([]);
 
   const fetchAPI = async () => {
     try {
       const response = await axios.get("http://localhost:8080/api");
-      const data = response.data;
-      console.log(data);
+      setAccounts(response.data.accounts);
     } catch (error) {
       console.error("Error fetching from API:", error);
     }
@@ -39,6 +39,9 @@ function App() {
         <p>
           Edit <code>src/App.tsx</code> and save to test HMR
         </p>
+        {accounts.map((account, index) => (
+          <div key={index}>{account}</div>
+        ))}
       </div>
       <p className="read-the-docs">
         Click on the Vite and React logos to learn more
