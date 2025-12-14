@@ -15,6 +15,7 @@
     "axios": "^1.13.2",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
+    "snaptrade-typescript-sdk": "^9.0.158",
     "uuid": "^13.0.0"
   },
   "devDependencies": {

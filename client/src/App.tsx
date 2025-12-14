@@ -3,7 +3,6 @@ import reactLogo from "./assets/react.svg";
 import viteLogo from "/vite.svg";
 import "./App.css";
 import axios from "axios";
-import { v4 as uuid } from "uuid";
 
 function App() {
   const [count, setCount] = useState(0);
