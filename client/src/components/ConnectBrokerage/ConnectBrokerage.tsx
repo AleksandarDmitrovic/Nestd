@@ -1,0 +1,44 @@
+import { useState } from "react";
+import { SnapTradeReact } from "snaptrade-react";
+
+const ConnectBrokerage = () => {
+  const [open, setOpen] = useState(false);
+  const [redirectLink, setRedirectLink] = useState(null);
+
+  const connectionProcess = async () => {
+    // call "https://api.snaptrade.com/api/v1/snapTrade/login" to  generate a redirect link
+    const response = await fetch("http://localhost:8080/api/snaptrade/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({}),
+    });
+
+    console.log("response :", response);
+
+    const data = await response.json();
+    console.log("data :", data);
+    const link = data.redirectURI;
+
+    // update the state with the generated link
+    await setRedirectLink(link);
+
+    // update the "open" state to show the modal
+    setOpen(true);
+  };
+  return (
+    <div>
+      {/* your Connect button */}
+      <button onClick={connectionProcess}>Connect</button>
+
+      {redirectLink && (
+        <SnapTradeReact
+          loginLink={redirectLink}
+          isOpen={open}
+          close={() => setOpen(false)}
+        />
+      )}
+    </div>
+  );
+};
+
+export default ConnectBrokerage;
