@@ -17,3 +17,23 @@ export const registerSnaptradeUser = async () => {
     console.error("Error registering Snaptrade user:", error);
   }
 };
+
+export const listSnaptradeAccounts = async () => {
+  try {
+    const response = await fetch(
+      `http://localhost:8080/api/snapTrade/accounts/${
+        import.meta.env.VITE_SNAPTRADE_USER_ID
+      }`,
+      {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+      }
+    );
+
+    const data = await response.json();
+    console.log("Snaptrade accounts fetched:", data);
+    return data;
+  } catch (error) {
+    console.error("Error fetching Snaptrade accounts:", error);
+  }
+};
