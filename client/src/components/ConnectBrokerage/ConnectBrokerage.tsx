@@ -10,7 +10,7 @@ const ConnectBrokerage = () => {
     const response = await fetch("http://localhost:8080/api/snapTrade/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({}),
+      body: JSON.stringify({ userId: import.meta.env.VITE_SNAPTRADE_USER_ID }),
     });
 
     console.log("response :", response);

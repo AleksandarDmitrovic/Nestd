@@ -40,7 +40,7 @@ app.post("/api/users", async (req, res) => {
         .json({ error: "User with this email already exists" });
     }
 
-    // Create user
+    // Create user (UUID will be auto-generated)
     const user = new User({
       email,
       firstName,
@@ -66,8 +66,35 @@ app.post("/api/users", async (req, res) => {
   }
 });
 
+// Get user by ID
+app.get("/api/users/:userId", async (req, res) => {
+  try {
+    const { userId } = req.params;
+
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    res.json({
+      id: user._id,
+      email: user.email,
+      firstName: user.firstName,
+      lastName: user.lastName,
+    });
+  } catch (error: any) {
+    console.error("Error fetching user:", error);
+    res
+      .status(500)
+      .json({ error: "Failed to fetch user", details: error.message });
+  }
+});
+
+// ============================================
+// SNAPTRADE ROUTES
+// ============================================
+
 app.get("/api", (req, res) => {
-  // res.send("Hello, World!");
   res.json({
     accounts: [
       "Investment Account 1",
@@ -77,22 +104,38 @@ app.get("/api", (req, res) => {
   });
 });
 
+// Generate Connection Portal URL
 app.post("/api/snapTrade/login", async (req, res) => {
   try {
     const { userId } = req.body;
-    const userSecret = ""; // Retrieve from env for testing refactor for mongo db later
+    console.log("serId :", userId);
+
+    // Get SnapTrade credentials user secret
+    const snapTradeCredentials = await SnapTradeCredentials.findById(userId);
+    console.log("existingCredentials :", snapTradeCredentials);
+    if (!snapTradeCredentials) {
+      return res
+        .status(404)
+        .json({ error: "User not registered with SnapTrade" });
+    }
+    const userSecret = snapTradeCredentials.snapTradeUserSecret; // Now it exists!
 
     const result = await snaptrade.authentication.loginSnapTradeUser({
-      userId: process.env.SNAPTRADE_USER_ID || userId,
-      userSecret: process.env.SNAPTRADE_USER_SECRET || userSecret,
+      userId,
+      userSecret,
     });
 
     res.json(result.data);
-  } catch (error: unknown) {
-    res.status(500).json({ error, message: "Failed to login to SnapTrade" });
+  } catch (error: any) {
+    console.error("Error logging in to SnapTrade:", error);
+    res.status(500).json({
+      error: "Failed to login to SnapTrade",
+      details: error.message,
+    });
   }
 });
 
+// Register user with SnapTrade
 app.post("/api/snapTrade/registerUser", async (req, res) => {
   try {
     const { userId } = req.body;
@@ -104,21 +147,22 @@ app.post("/api/snapTrade/registerUser", async (req, res) => {
     }
 
     // Check if user already has SnapTrade credentials
-    const existingCredentials = await SnapTradeCredentials.findOne({
-      userId: user._id,
-    });
+    const existingCredentials = await SnapTradeCredentials.findById(user._id);
+    console.log("existingCredentials :", existingCredentials);
     if (existingCredentials) {
       return res
         .status(400)
         .json({ error: "User already registered with SnapTrade" });
     }
 
+    // Register with SnapTrade API using the user's UUID
     const result = await snaptrade.authentication.registerSnapTradeUser({
       userId,
     });
-    console.log(result.data);
 
-    // Save credentials to database
+    console.log("SnapTrade registration result:", result.data);
+
+    // Save credentials to database with _id
     const credentials = new SnapTradeCredentials({
       _id: user._id,
       snapTradeUserSecret: result.data.userSecret,
@@ -140,6 +184,42 @@ app.post("/api/snapTrade/registerUser", async (req, res) => {
   }
 });
 
+// Get SnapTrade accounts for a user
+app.get("/api/snaptrade/accounts/:userId", async (req, res) => {
+  try {
+    const { userId } = req.params;
+
+    // Verify user exists
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    // Get credentials using _id (which is the userId)
+    const credentials = await SnapTradeCredentials.findById(userId);
+    if (!credentials) {
+      return res.status(404).json({
+        error: "User not registered with SnapTrade",
+      });
+    }
+
+    // Fetch accounts from SnapTrade
+    const result = await snaptrade.accountInformation.listUserAccounts({
+      userId: userId,
+      userSecret: credentials.snapTradeUserSecret,
+    });
+
+    res.json(result.data);
+  } catch (error: any) {
+    console.error("Error fetching SnapTrade accounts:", error);
+    res.status(500).json({
+      error: "Failed to fetch accounts",
+      details: error.message,
+    });
+  }
+});
+
+// Start server
 app.listen(8080, () => {
   console.log("Server is running on http://localhost:8080");
 });

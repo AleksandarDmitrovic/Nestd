@@ -14,7 +14,6 @@ const SnapTradeCredentialsSchema: Schema = new Schema(
       type: String, // UUID string Reference to User also the userId used in SnapTrade API
       ref: "User",
       required: true,
-      unique: true, // One SnapTrade account per user
     },
     snapTradeUserSecret: {
       type: String,
