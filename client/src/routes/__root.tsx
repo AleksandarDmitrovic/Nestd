@@ -1,7 +1,11 @@
 import { createRootRoute, Link, Outlet } from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import MenuIcon from "@mui/icons-material/Menu";
 import styles from "./root.module.css";
+
+// Create a client
+const queryClient = new QueryClient();
 
 const RootLayout = () => (
   <>
@@ -18,7 +22,9 @@ const RootLayout = () => (
       </header>
     </div>
     <hr style={{ width: "100vw" }} />
-    <Outlet />
+    <QueryClientProvider client={queryClient}>
+      <Outlet />
+    </QueryClientProvider>
     <TanStackRouterDevtools />
   </>
 );
