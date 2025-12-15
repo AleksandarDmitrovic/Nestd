@@ -1,16 +1,16 @@
 import { useState } from "react";
-import { SnapTradeReact } from "snaptrade-react";
+import { SnapTradeReact } from "snapTrade-react";
 
 const ConnectBrokerage = () => {
   const [open, setOpen] = useState(false);
   const [redirectLink, setRedirectLink] = useState(null);
 
   const connectionProcess = async () => {
-    // call "https://api.snaptrade.com/api/v1/snapTrade/login" to  generate a redirect link
-    const response = await fetch("http://localhost:8080/api/snaptrade/login", {
+    // call "https://api.snapTrade.com/api/v1/snapTrade/login" to  generate a redirect link
+    const response = await fetch("http://localhost:8080/api/snapTrade/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({}),
+      body: JSON.stringify({ userId: import.meta.env.VITE_SNAPTRADE_USER_ID }),
     });
 
     console.log("response :", response);

@@ -1,26 +1,14 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import reactLogo from "./assets/react.svg";
 import viteLogo from "/vite.svg";
 import "./App.css";
-import axios from "axios";
 import ConnectBrokerage from "./components/ConnectBrokerage/ConnectBrokerage";
+import { registerSnaptradeUser } from "./api/snaptrade";
+import { addUser } from "./api/users";
 
 function App() {
   const [count, setCount] = useState(0);
   const [accounts, setAccounts] = useState<string[]>([]);
-
-  const fetchAPI = async () => {
-    try {
-      const response = await axios.get("http://localhost:8080/api");
-      setAccounts(response.data.accounts);
-    } catch (error) {
-      console.error("Error fetching from API:", error);
-    }
-  };
-
-  useEffect(() => {
-    fetchAPI();
-  }, []);
 
   return (
     <>
@@ -48,6 +36,11 @@ function App() {
         Click on the Vite and React logos to learn more
       </p>
       <ConnectBrokerage />
+
+      <button onClick={addUser}>Add User</button>
+      <button onClick={registerSnaptradeUser}>
+        Register User with Snaptrade
+      </button>
     </>
   );
 }
