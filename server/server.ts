@@ -185,7 +185,7 @@ app.post("/api/snapTrade/registerUser", async (req, res) => {
 });
 
 // Get SnapTrade accounts for a user
-app.get("/api/snaptrade/accounts/:userId", async (req, res) => {
+app.get("/api/snapTrade/accounts/:userId", async (req, res) => {
   try {
     const { userId } = req.params;
 
