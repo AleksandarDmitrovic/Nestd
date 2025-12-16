@@ -13,7 +13,6 @@ const Dashboard = () => {
 
   const { settings } = useUserSettings();
   const { currentAge, retirementAge, returnRate, inflationRate } = settings;
-  console.log("settings :", settings);
 
   if (isPending) return "Loading...";
 
