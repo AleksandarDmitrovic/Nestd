@@ -1,0 +1,18 @@
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background-color: #242424;
+  inline-size: 100vw;
+}
+
+.title {
+  background-color: #11b981;
+  padding: 1rem;
+  border-radius: 20px;
+  inline-size: fit-content;
+  margin: 1rem;
+}

@@ -1,34 +1,69 @@
+import { listSnaptradeAccounts } from "../../api/snaptrade";
+import { calculateInvestmentValue } from "../../helpers/retirementCalaculators";
+import { useUserSettings } from "../../providers.tsx/UserSettingsProvider";
 import styles from "./Dashboard.module.css";
-import MenuIcon from "@mui/icons-material/Menu";
+import { useQuery } from "@tanstack/react-query";
 
 const Dashboard = () => {
+  const { isPending, error, data } = useQuery({
+    queryKey: ["snapTrade"],
+    queryFn: () => listSnaptradeAccounts(),
+  });
+
+  const currencyDenomination =
+    data.length > 0 ? data[0].balance?.total?.currency : "";
+
+  const totalBalance = data.reduce(
+    (total: number, account: { balance: { total: { amount: number } } }) => {
+      const amount = total + account.balance?.total?.amount || 0;
+      return parseFloat(amount.toFixed(2));
+    },
+    0
+  );
+
+  const { settings } = useUserSettings();
+  const { currentAge, retirementAge, returnRate, inflationRate } = settings;
+  console.log("settings :", settings);
+
+  const retirementValueObject = calculateInvestmentValue(
+    totalBalance,
+    currentAge,
+    retirementAge,
+    returnRate,
+    inflationRate
+  );
+
+  if (isPending) return "Loading...";
+
+  if (error) return "An error has occurred: " + error.message;
+
   return (
-    <>
-      <header className={styles.header}>
-        <h1 className={styles.title}>Nestd</h1>
-        <MenuIcon fontSize="large" />
-      </header>
-      <main>
-        <div className={styles.total_container}>
-          <span className={styles.total_title}>Total Retirement Savings</span>
-          <span className={styles.total_value}>$487,320</span>
-          <span className={styles.total_subtitle}>
-            Combined family accounts
-          </span>
-        </div>
-        <div className={styles.total_container}>
-          <span className={styles.total_title}>Projected Value at 65</span>
-          <span className={styles.total_value}>$1,200,000</span>
-          <span className={styles.total_subtitle}>
-            In today's dollars: $892K
-          </span>
-        </div>
-        <div className={styles.chart_container}>
-          <span className={styles.total_title}>Growth Chart</span>
-        </div>
-        <button className={styles.button}>Set Retirement Goal</button>
-      </main>
-    </>
+    <main>
+      <div className={styles.total_container}>
+        <span className={styles.total_title}>Total Retirement Savings</span>
+        <span className={styles.total_value}>
+          {totalBalance} {currencyDenomination}
+        </span>
+        <span className={styles.total_subtitle}>Combined family accounts</span>
+      </div>
+      <div className={styles.total_container}>
+        <span className={styles.total_title}>
+          Projected Value at {settings.retirementAge} (
+          {retirementValueObject.yearsOfInvestment} years of investment)
+        </span>
+        <span className={styles.total_value}>
+          {retirementValueObject.futureValue} {currencyDenomination}
+        </span>
+        <span className={styles.total_subtitle}>
+          In today's dollars: {retirementValueObject.valueInTodaysDollars}{" "}
+          {currencyDenomination}
+        </span>
+      </div>
+      {/* <div className={styles.chart_container}>
+        <span className={styles.total_title}>Growth Chart</span>
+      </div> */}
+      <button className={styles.button}>Set Retirement Goal</button>
+    </main>
   );
 };
 
