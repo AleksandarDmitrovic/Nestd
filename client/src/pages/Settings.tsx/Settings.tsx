@@ -1,7 +1,7 @@
 import { useUserSettings } from "../../providers.tsx/UserSettingsProvider";
 import styles from "./Settings.module.css";
 
-export const SettingsExample = () => {
+const Settings = () => {
   const { settings, updateSettings, resetSettings } = useUserSettings();
 
   return (
@@ -89,3 +89,5 @@ export const SettingsExample = () => {
     </>
   );
 };
+
+export default Settings;
