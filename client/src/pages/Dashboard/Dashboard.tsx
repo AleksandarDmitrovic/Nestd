@@ -1,3 +1,4 @@
+import Button from "@mui/material/Button";
 import { listSnaptradeAccounts } from "../../api/snaptrade";
 import { calculateInvestmentValue } from "../../helpers/retirementCalaculators";
 import { useUserSettings } from "../../providers.tsx/UserSettingsProvider";
@@ -62,7 +63,9 @@ const Dashboard = () => {
       {/* <div className={styles.chart_container}>
         <span className={styles.total_title}>Growth Chart</span>
       </div> */}
-      <button className={styles.button}>Set Retirement Goal</button>
+      <Button variant="contained" className={styles.button}>
+        Set Retirement Goal
+      </Button>
     </main>
   );
 };
