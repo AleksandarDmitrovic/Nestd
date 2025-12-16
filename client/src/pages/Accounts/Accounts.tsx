@@ -1,11 +1,13 @@
-import Button from "@mui/material/Button";
 import { listSnaptradeAccounts } from "../../api/snaptrade";
 import styles from "./Accounts.module.css";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import Typography from "@mui/material/Typography";
 import Grid from "@mui/material/Grid";
+import ConnectBrokerage from "../../components/ConnectBrokerage/ConnectBrokerage";
 
 const Accounts = () => {
+  const queryClient = useQueryClient();
+
   const { isPending, error, data } = useQuery({
     queryKey: ["snapTrade"],
     queryFn: () => listSnaptradeAccounts(),
@@ -16,6 +18,11 @@ const Accounts = () => {
   if (error) return "An error has occurred: " + error.message;
 
   console.log("data :", data);
+
+  const invalidateCacheAccountData = () => {
+    console.log("Invalidating snapTrade account data cache");
+    queryClient.invalidateQueries({ queryKey: ["snapTrade"] });
+  };
 
   return (
     <main>
@@ -43,10 +50,9 @@ const Accounts = () => {
           </span>
         </div>
       ))}
+      <br />
 
-      <Button variant="contained" className={styles.button}>
-        Set Retirement Goal
-      </Button>
+      <ConnectBrokerage invalidateCache={invalidateCacheAccountData} />
     </main>
   );
 };
