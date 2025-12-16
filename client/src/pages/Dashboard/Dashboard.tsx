@@ -10,10 +10,15 @@ const Dashboard = () => {
     queryFn: () => listSnaptradeAccounts(),
   });
 
-  const currencyDenomination =
-    data.length > 0 ? data[0].balance?.total?.currency : "";
+  const { settings } = useUserSettings();
+  const { currentAge, retirementAge, returnRate, inflationRate } = settings;
+  console.log("settings :", settings);
 
-  const totalBalance = data.reduce(
+  if (isPending) return "Loading...";
+
+  if (error) return "An error has occurred: " + error.message;
+
+  const totalBalance = data?.reduce(
     (total: number, account: { balance: { total: { amount: number } } }) => {
       const amount = total + account.balance?.total?.amount || 0;
       return parseFloat(amount.toFixed(2));
@@ -21,9 +26,8 @@ const Dashboard = () => {
     0
   );
 
-  const { settings } = useUserSettings();
-  const { currentAge, retirementAge, returnRate, inflationRate } = settings;
-  console.log("settings :", settings);
+  const currencyDenomination =
+    data?.length > 0 ? data[0].balance?.total?.currency : "";
 
   const retirementValueObject = calculateInvestmentValue(
     totalBalance,
@@ -32,10 +36,6 @@ const Dashboard = () => {
     returnRate,
     inflationRate
   );
-
-  if (isPending) return "Loading...";
-
-  if (error) return "An error has occurred: " + error.message;
 
   return (
     <main>
