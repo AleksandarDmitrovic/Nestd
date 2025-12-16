@@ -1,17 +1,37 @@
 import { listSnaptradeAccounts } from "../../api/snaptrade";
+import { calculateInvestmentValue } from "../../helpers/retirementCalaculators";
 import { useUserSettings } from "../../providers.tsx/UserSettingsProvider";
 import styles from "./Dashboard.module.css";
 import { useQuery } from "@tanstack/react-query";
 
 const Dashboard = () => {
-  const { settings, updateSettings, resetSettings } = useUserSettings();
-  console.log("settings :", settings);
-
   const { isPending, error, data } = useQuery({
     queryKey: ["snapTrade"],
     queryFn: () => listSnaptradeAccounts(),
   });
-  console.log("data :", data);
+
+  const currencyDenomination =
+    data.length > 0 ? data[0].balance?.total?.currency : "";
+
+  const totalBalance = data.reduce(
+    (total: number, account: { balance: { total: { amount: number } } }) => {
+      const amount = total + account.balance?.total?.amount || 0;
+      return parseFloat(amount.toFixed(2));
+    },
+    0
+  );
+
+  const { settings } = useUserSettings();
+  const { currentAge, retirementAge, returnRate, inflationRate } = settings;
+  console.log("settings :", settings);
+
+  const retirementValueObject = calculateInvestmentValue(
+    totalBalance,
+    currentAge,
+    retirementAge,
+    returnRate,
+    inflationRate
+  );
 
   if (isPending) return "Loading...";
 
@@ -22,26 +42,22 @@ const Dashboard = () => {
       <div className={styles.total_container}>
         <span className={styles.total_title}>Total Retirement Savings</span>
         <span className={styles.total_value}>
-          {data.reduce(
-            (
-              total: number,
-              account: { balance: { total: { amount: number } } }
-            ) => {
-              const amount = total + account.balance?.total?.amount || 0;
-              return parseFloat(amount.toFixed(2));
-            },
-            0
-          )}{" "}
-          {data.length > 0 ? data[0].balance?.total?.currency : ""}
+          {totalBalance} {currencyDenomination}
         </span>
         <span className={styles.total_subtitle}>Combined family accounts</span>
       </div>
       <div className={styles.total_container}>
         <span className={styles.total_title}>
-          Projected Value at {settings.retirementAge}
+          Projected Value at {settings.retirementAge} (
+          {retirementValueObject.yearsOfInvestment} years of investment)
         </span>
-        <span className={styles.total_value}>$1,200,000</span>
-        <span className={styles.total_subtitle}>In today's dollars: $892K</span>
+        <span className={styles.total_value}>
+          {retirementValueObject.futureValue} {currencyDenomination}
+        </span>
+        <span className={styles.total_subtitle}>
+          In today's dollars: {retirementValueObject.valueInTodaysDollars}{" "}
+          {currencyDenomination}
+        </span>
       </div>
       {/* <div className={styles.chart_container}>
         <span className={styles.total_title}>Growth Chart</span>
