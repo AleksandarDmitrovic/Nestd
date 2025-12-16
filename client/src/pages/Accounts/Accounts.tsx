@@ -2,6 +2,8 @@ import Button from "@mui/material/Button";
 import { listSnaptradeAccounts } from "../../api/snaptrade";
 import styles from "./Accounts.module.css";
 import { useQuery } from "@tanstack/react-query";
+import Typography from "@mui/material/Typography";
+import Grid from "@mui/material/Grid";
 
 const Accounts = () => {
   const { isPending, error, data } = useQuery({
@@ -14,26 +16,33 @@ const Accounts = () => {
   if (error) return "An error has occurred: " + error.message;
 
   console.log("data :", data);
-  const totalBalance = data?.reduce(
-    (total: number, account: { balance: { total: { amount: number } } }) => {
-      const amount = total + account.balance?.total?.amount || 0;
-      return parseFloat(amount.toFixed(2));
-    },
-    0
-  );
-
-  const currencyDenomination =
-    data?.length > 0 ? data[0].balance?.total?.currency : "";
 
   return (
     <main>
-      <div className={styles.total_container}>
-        <span className={styles.total_title}>Total Retirement Savings</span>
-        <span className={styles.total_value}>
-          {totalBalance} {currencyDenomination}
-        </span>
-        <span className={styles.total_subtitle}>Combined family accounts</span>
-      </div>
+      {data?.map((account: any) => (
+        <div key={account.id} className={styles.total_container}>
+          <Grid display="flex" flexDirection="column" gap={1}>
+            <Typography
+              display="flex"
+              alignSelf="center"
+              variant="h3"
+              color="textSecondary"
+            >
+              {account?.institution_name}
+            </Typography>
+            <span className={styles.total_subtitle}>
+              Sync Status:
+              {account.sync_status.holdings.initial_sync_completed
+                ? " ✅"
+                : " ❌"}
+            </span>
+          </Grid>
+          <span className={styles.total_value}>
+            {account.balance?.total?.amount.toFixed(2)}{" "}
+            {account.balance?.total?.currency}
+          </span>
+        </div>
+      ))}
 
       <Button variant="contained" className={styles.button}>
         Set Retirement Goal

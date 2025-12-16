@@ -16,7 +16,8 @@ main {
 
 .total_container {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  justify-content: space-between;
   inline-size: 60vw;
   background-color: #f3f4f6f1;
   border: 0.25rem solid #bcbec2;
