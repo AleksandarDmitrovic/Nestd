@@ -55,10 +55,12 @@ const Dashboard = () => {
         <span className={styles.total_value}>
           {retirementValueObject.futureValue} {currencyDenomination}
         </span>
-        <span className={styles.total_subtitle}>
-          In today's dollars: {retirementValueObject.valueInTodaysDollars}{" "}
-          {currencyDenomination}
-        </span>
+        {settings.showValueInTodaysDollars && (
+          <span className={styles.total_subtitle}>
+            In today's dollars: {retirementValueObject.valueInTodaysDollars}{" "}
+            {currencyDenomination}
+          </span>
+        )}
       </div>
       {/* <div className={styles.chart_container}>
         <span className={styles.total_title}>Growth Chart</span>

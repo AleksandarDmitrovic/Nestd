@@ -1,8 +1,11 @@
+import Button from "@mui/material/Button";
 import { useUserSettings } from "../../providers.tsx/UserSettingsProvider";
 import styles from "./Settings.module.css";
+import Switch from "@mui/material/Switch";
 
 const Settings = () => {
   const { settings, updateSettings, resetSettings } = useUserSettings();
+  const showUserSettingsState = false;
 
   return (
     <>
@@ -61,8 +64,7 @@ const Settings = () => {
           </div>
 
           <div className={styles.checkboxGroup}>
-            <input
-              type="checkbox"
+            <Switch
               checked={settings.showValueInTodaysDollars}
               onChange={(e) =>
                 updateSettings({ showValueInTodaysDollars: e.target.checked })
@@ -74,17 +76,22 @@ const Settings = () => {
             </label>
           </div>
 
-          <button onClick={resetSettings} className={styles.button}>
+          <Button
+            variant="contained"
+            onClick={resetSettings}
+            className={styles.button}
+          >
             Reset to Defaults
-          </button>
+          </Button>
         </div>
-
-        <div className={styles.preview}>
-          <h3 className={styles.previewTitle}>Current Settings:</h3>
-          <pre className={styles.previewContent}>
-            {JSON.stringify(settings, null, 2)}
-          </pre>
-        </div>
+        {showUserSettingsState && (
+          <div className={styles.preview}>
+            <h3 className={styles.previewTitle}>Current Settings:</h3>
+            <pre className={styles.previewContent}>
+              {JSON.stringify(settings, null, 2)}
+            </pre>
+          </div>
+        )}
       </div>
     </>
   );

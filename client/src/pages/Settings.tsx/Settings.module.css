@@ -51,28 +51,18 @@
 }
 
 .checkbox {
-  width: 1rem;
-  height: 1rem;
   margin-right: 0.5rem;
 }
 
 .button {
   margin-top: 1rem;
   padding: 0.5rem 1rem;
-  background-color: #e5e7eb;
-  border: none;
-  border-radius: 0.375rem;
-  cursor: pointer;
-}
-
-.button:hover {
-  background-color: #d1d5db;
 }
 
 .preview {
   margin-top: 1.5rem;
   padding: 1rem;
-  background-color: #f9fafb;
+  background-color: #057ff9;
   border-radius: 0.375rem;
 }
 
