@@ -123,6 +123,7 @@ app.post("/api/snapTrade/login", async (req, res) => {
     const result = await snaptrade.authentication.loginSnapTradeUser({
       userId,
       userSecret,
+      darkMode: true,
     });
 
     res.json(result.data);
