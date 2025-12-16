@@ -3,6 +3,7 @@ import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import MenuIcon from "@mui/icons-material/Menu";
 import styles from "./root.module.css";
+import { UserSettingsProvider } from "../providers.tsx/UserSettingsProvider";
 
 // Create a client
 const queryClient = new QueryClient();
@@ -22,9 +23,11 @@ const RootLayout = () => (
       </header>
     </div>
     <hr style={{ width: "100vw" }} />
-    <QueryClientProvider client={queryClient}>
-      <Outlet />
-    </QueryClientProvider>
+    <UserSettingsProvider>
+      <QueryClientProvider client={queryClient}>
+        <Outlet />
+      </QueryClientProvider>
+    </UserSettingsProvider>
     <TanStackRouterDevtools />
   </>
 );
