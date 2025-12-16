@@ -19,6 +19,9 @@ const RootLayout = () => (
         <Link to="/about" className="[&.active]:font-bold">
           About
         </Link>
+        <Link to="/settings" className="[&.active]:font-bold">
+          Settings
+        </Link>
         <MenuIcon fontSize="large" />
       </header>
     </div>
