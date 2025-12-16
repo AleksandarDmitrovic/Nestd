@@ -1,3 +1,4 @@
+import Button from "@mui/material/Button";
 import { listSnaptradeAccounts } from "../../api/snaptrade";
 import { calculateInvestmentValue } from "../../helpers/retirementCalaculators";
 import { useUserSettings } from "../../providers.tsx/UserSettingsProvider";
@@ -10,10 +11,15 @@ const Dashboard = () => {
     queryFn: () => listSnaptradeAccounts(),
   });
 
-  const currencyDenomination =
-    data.length > 0 ? data[0].balance?.total?.currency : "";
+  const { settings } = useUserSettings();
+  const { currentAge, retirementAge, returnRate, inflationRate } = settings;
+  console.log("settings :", settings);
 
-  const totalBalance = data.reduce(
+  if (isPending) return "Loading...";
+
+  if (error) return "An error has occurred: " + error.message;
+
+  const totalBalance = data?.reduce(
     (total: number, account: { balance: { total: { amount: number } } }) => {
       const amount = total + account.balance?.total?.amount || 0;
       return parseFloat(amount.toFixed(2));
@@ -21,9 +27,8 @@ const Dashboard = () => {
     0
   );
 
-  const { settings } = useUserSettings();
-  const { currentAge, retirementAge, returnRate, inflationRate } = settings;
-  console.log("settings :", settings);
+  const currencyDenomination =
+    data?.length > 0 ? data[0].balance?.total?.currency : "";
 
   const retirementValueObject = calculateInvestmentValue(
     totalBalance,
@@ -32,10 +37,6 @@ const Dashboard = () => {
     returnRate,
     inflationRate
   );
-
-  if (isPending) return "Loading...";
-
-  if (error) return "An error has occurred: " + error.message;
 
   return (
     <main>
@@ -54,15 +55,19 @@ const Dashboard = () => {
         <span className={styles.total_value}>
           {retirementValueObject.futureValue} {currencyDenomination}
         </span>
-        <span className={styles.total_subtitle}>
-          In today's dollars: {retirementValueObject.valueInTodaysDollars}{" "}
-          {currencyDenomination}
-        </span>
+        {settings.showValueInTodaysDollars && (
+          <span className={styles.total_subtitle}>
+            In today's dollars: {retirementValueObject.valueInTodaysDollars}{" "}
+            {currencyDenomination}
+          </span>
+        )}
       </div>
       {/* <div className={styles.chart_container}>
         <span className={styles.total_title}>Growth Chart</span>
       </div> */}
-      <button className={styles.button}>Set Retirement Goal</button>
+      <Button variant="contained" className={styles.button}>
+        Set Retirement Goal
+      </Button>
     </main>
   );
 };
