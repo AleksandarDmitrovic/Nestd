@@ -6,10 +6,16 @@ import styles from "./Dashboard.module.css";
 import { useQuery } from "@tanstack/react-query";
 
 const Dashboard = () => {
+  const userId = import.meta.env.VITE_SNAPTRADE_USER_ID;
   const { isPending, error, data } = useQuery({
-    queryKey: ["snapTrade"],
-    queryFn: () =>
-      listSnaptradeAccounts(import.meta.env.VITE_SNAPTRADE_USER_ID),
+    queryKey: ["snapTrade", userId],
+    queryFn: () => listSnaptradeAccounts(userId),
+  });
+
+  const partnerUserId = import.meta.env.VITE_PARTNER_SNAPTRADE_USER_ID;
+  const { data: partnerData } = useQuery({
+    queryKey: ["snapTrade", partnerUserId],
+    queryFn: () => listSnaptradeAccounts(partnerUserId),
   });
 
   const { settings } = useUserSettings();
@@ -19,7 +25,9 @@ const Dashboard = () => {
 
   if (error) return "An error has occurred: " + error.message;
 
-  const totalBalance = data?.reduce(
+  const combinedData = data.concat(partnerData);
+
+  const totalBalance = combinedData?.reduce(
     (total: number, account: { balance: { total: { amount: number } } }) => {
       const amount = total + account.balance?.total?.amount || 0;
       return parseFloat(amount.toFixed(2));
@@ -28,7 +36,7 @@ const Dashboard = () => {
   );
 
   const currencyDenomination =
-    data?.length > 0 ? data[0].balance?.total?.currency : "";
+    data?.length > 0 ? data[0].balance?.total?.currency : "CAD";
 
   const retirementValueObject = calculateInvestmentValue(
     totalBalance,

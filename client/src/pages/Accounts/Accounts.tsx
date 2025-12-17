@@ -8,6 +8,12 @@ import ConnectBrokerage from "../../components/ConnectBrokerage/ConnectBrokerage
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import { useState } from "react";
+import Button from "@mui/material/Button";
+
+const AccountsMatrix = {
+  self: 0,
+  partner: 1,
+};
 
 const Accounts = () => {
   const [value, setValue] = useState(0);
@@ -19,7 +25,7 @@ const Accounts = () => {
     if (newValue === 0) {
       setSnaptradeUserID(import.meta.env.VITE_SNAPTRADE_USER_ID);
     } else if (newValue === 1) {
-      setSnaptradeUserID("partner");
+      setSnaptradeUserID(import.meta.env.VITE_PARTNER_SNAPTRADE_USER_ID);
     }
     setValue(newValue);
   };
@@ -82,7 +88,13 @@ const Accounts = () => {
         ))}
         <br />
 
-        <ConnectBrokerage invalidateCache={invalidateCacheAccountData} />
+        {value === AccountsMatrix.self ? (
+          <ConnectBrokerage invalidateCache={invalidateCacheAccountData} />
+        ) : (
+          <Button variant="contained" fullWidth>
+            Connect Partner Accounts
+          </Button>
+        )}
       </Grid>
     </main>
   );
