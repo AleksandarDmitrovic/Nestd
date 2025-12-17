@@ -8,7 +8,8 @@ import { useQuery } from "@tanstack/react-query";
 const Dashboard = () => {
   const { isPending, error, data } = useQuery({
     queryKey: ["snapTrade"],
-    queryFn: () => listSnaptradeAccounts(),
+    queryFn: () =>
+      listSnaptradeAccounts(import.meta.env.VITE_SNAPTRADE_USER_ID),
   });
 
   const { settings } = useUserSettings();

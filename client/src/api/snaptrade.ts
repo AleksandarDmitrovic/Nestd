@@ -18,12 +18,10 @@ export const registerSnaptradeUser = async () => {
   }
 };
 
-export const listSnaptradeAccounts = async () => {
+export const listSnaptradeAccounts = async (userId: string) => {
   try {
     const response = await fetch(
-      `http://localhost:8080/api/snapTrade/accounts/${
-        import.meta.env.VITE_SNAPTRADE_USER_ID
-      }`,
+      `http://localhost:8080/api/snapTrade/accounts/${userId}`,
       {
         method: "GET",
         headers: { "Content-Type": "application/json" },
