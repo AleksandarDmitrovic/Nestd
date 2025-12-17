@@ -33,9 +33,13 @@ const ConnectBrokerage: React.FC<ConnectBrokerageProps> = ({
     setOpen(true);
   };
   return (
-    <div>
+    <>
       {/* your Connect button */}
-      <Button variant="contained" onClick={connectionProcess}>
+      <Button
+        variant="contained"
+        onClick={connectionProcess}
+        sx={{ width: "inherit" }}
+      >
         ✚ Connect Brokerage Account
       </Button>
 
@@ -49,7 +53,7 @@ const ConnectBrokerage: React.FC<ConnectBrokerageProps> = ({
           }}
         />
       )}
-    </div>
+    </>
   );
 };
 
