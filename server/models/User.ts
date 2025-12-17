@@ -6,6 +6,7 @@ export interface IUser extends Document {
   lastName: string;
   createdAt: Date;
   updatedAt: Date;
+  snapTradeUserSecret?: string;
 }
 
 const UserSchema: Schema = new Schema(
@@ -30,6 +31,9 @@ const UserSchema: Schema = new Schema(
       type: String,
       required: true,
       trim: true,
+    },
+    snapTradeUserSecret: {
+      type: String,
     },
   },
   {
