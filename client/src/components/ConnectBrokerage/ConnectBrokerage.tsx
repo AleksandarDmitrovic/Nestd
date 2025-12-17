@@ -1,7 +1,14 @@
+import Button from "@mui/material/Button";
 import { useState } from "react";
 import { SnapTradeReact } from "snapTrade-react";
 
-const ConnectBrokerage = () => {
+type ConnectBrokerageProps = {
+  invalidateCache: () => void;
+};
+
+const ConnectBrokerage: React.FC<ConnectBrokerageProps> = ({
+  invalidateCache,
+}) => {
   const [open, setOpen] = useState(false);
   const [redirectLink, setRedirectLink] = useState(null);
 
@@ -26,18 +33,27 @@ const ConnectBrokerage = () => {
     setOpen(true);
   };
   return (
-    <div>
+    <>
       {/* your Connect button */}
-      <button onClick={connectionProcess}>Connect</button>
+      <Button
+        variant="contained"
+        onClick={connectionProcess}
+        sx={{ width: "inherit" }}
+      >
+        ✚ Connect Brokerage Account
+      </Button>
 
       {redirectLink && (
         <SnapTradeReact
           loginLink={redirectLink}
           isOpen={open}
-          close={() => setOpen(false)}
+          close={() => {
+            setOpen(false);
+            invalidateCache();
+          }}
         />
       )}
-    </div>
+    </>
   );
 };
 

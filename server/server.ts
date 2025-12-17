@@ -4,7 +4,6 @@ import { Snaptrade } from "snaptrade-typescript-sdk";
 import { loadEnvFile } from "node:process";
 import { connectDB } from "./config/database.ts";
 import User from "./models/User.ts";
-import SnapTradeCredentials from "./models/SnapTradeCredentials.ts";
 
 loadEnvFile("./.env");
 
@@ -28,7 +27,7 @@ const snaptrade = new Snaptrade({
 // ============================================
 
 // Create a new user
-app.post("/api/users", async (req, res) => {
+app.post("/api/addUser", async (req, res) => {
   try {
     const { email, firstName, lastName } = req.body;
 
@@ -111,18 +110,19 @@ app.post("/api/snapTrade/login", async (req, res) => {
     console.log("serId :", userId);
 
     // Get SnapTrade credentials user secret
-    const snapTradeCredentials = await SnapTradeCredentials.findById(userId);
-    console.log("existingCredentials :", snapTradeCredentials);
-    if (!snapTradeCredentials) {
+    const user = await User.findById(userId);
+    const userSecret = user?.snapTradeUserSecret;
+
+    if (!userSecret) {
       return res
         .status(404)
         .json({ error: "User not registered with SnapTrade" });
     }
-    const userSecret = snapTradeCredentials.snapTradeUserSecret; // Now it exists!
 
     const result = await snaptrade.authentication.loginSnapTradeUser({
       userId,
       userSecret,
+      darkMode: true,
     });
 
     res.json(result.data);
@@ -147,8 +147,7 @@ app.post("/api/snapTrade/registerUser", async (req, res) => {
     }
 
     // Check if user already has SnapTrade credentials
-    const existingCredentials = await SnapTradeCredentials.findById(user._id);
-    console.log("existingCredentials :", existingCredentials);
+    const existingCredentials = user?.snapTradeUserSecret;
     if (existingCredentials) {
       return res
         .status(400)
@@ -160,16 +159,11 @@ app.post("/api/snapTrade/registerUser", async (req, res) => {
       userId,
     });
 
-    console.log("SnapTrade registration result:", result.data);
-
-    // Save credentials to database with _id
-    const credentials = new SnapTradeCredentials({
-      _id: user._id,
+    // Save SnapTrade credentials to database
+    const update = {
       snapTradeUserSecret: result.data.userSecret,
-      isActive: true,
-    });
-
-    await credentials.save();
+    };
+    await User.findByIdAndUpdate(user._id, update);
 
     res.status(201).json({
       message: "User registered with SnapTrade successfully",
@@ -195,9 +189,9 @@ app.get("/api/snapTrade/accounts/:userId", async (req, res) => {
       return res.status(404).json({ error: "User not found" });
     }
 
-    // Get credentials using _id (which is the userId)
-    const credentials = await SnapTradeCredentials.findById(userId);
-    if (!credentials) {
+    // Check snaptrade secret
+    const secret = user.snapTradeUserSecret;
+    if (!secret) {
       return res.status(404).json({
         error: "User not registered with SnapTrade",
       });
@@ -206,7 +200,7 @@ app.get("/api/snapTrade/accounts/:userId", async (req, res) => {
     // Fetch accounts from SnapTrade
     const result = await snaptrade.accountInformation.listUserAccounts({
       userId: userId,
-      userSecret: credentials.snapTradeUserSecret,
+      userSecret: secret,
     });
 
     res.json(result.data);
