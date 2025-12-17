@@ -1,4 +1,4 @@
-export const registerSnaptradeUser = async () => {
+export const registerSnaptradeUser = async (userId: string) => {
   try {
     const response = await fetch(
       "http://localhost:8080/api/snapTrade/registerUser",
@@ -6,7 +6,7 @@ export const registerSnaptradeUser = async () => {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          userId: import.meta.env.VITE_SNAPTRADE_USER_ID || "test-user-id",
+          userId: userId || "test-user-id",
         }),
       }
     );
