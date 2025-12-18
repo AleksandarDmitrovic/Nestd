@@ -107,7 +107,6 @@ app.get("/api", (req, res) => {
 app.post("/api/snapTrade/login", async (req, res) => {
   try {
     const { userId } = req.body;
-    console.log("serId :", userId);
 
     // Get SnapTrade credentials user secret
     const user = await User.findById(userId);
