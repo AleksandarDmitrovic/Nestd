@@ -67,7 +67,7 @@ const Dashboard = () => {
   );
 
   const currencyDenomination =
-    data?.length > 0 ? data[0].balance?.total?.currency : "CAD";
+    partnerData?.length > 0 ? partnerData[0].balance?.total?.currency : "CAD";
 
   const retirementValueObject = calculateInvestmentValue(
     totalBalance,
@@ -116,6 +116,10 @@ const Dashboard = () => {
       },
     ],
   };
+
+  if (settings.showValueInTodaysDollars === false) {
+    chartData.datasets.pop();
+  }
 
   return (
     <main>
