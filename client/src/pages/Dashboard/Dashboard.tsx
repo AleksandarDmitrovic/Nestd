@@ -95,6 +95,20 @@ const Dashboard = () => {
         text: "Retirement Projections",
       },
     },
+    scales: {
+      x: {
+        title: {
+          display: true,
+          text: "Age",
+        },
+      },
+      y: {
+        title: {
+          display: true,
+          text: "Projected Value",
+        },
+      },
+    },
   };
 
   const labels = retirementChartData.map((row) => row.age);
