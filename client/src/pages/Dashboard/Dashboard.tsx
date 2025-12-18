@@ -19,6 +19,7 @@ import {
   calculateInvestmentValue,
   calculateInvestmentValueDetailed,
 } from "../../helpers/retirementCalculators";
+import useMediaQuery from "@mui/material/useMediaQuery";
 
 ChartJS.register(
   CategoryScale,
@@ -32,6 +33,8 @@ ChartJS.register(
 
 const Dashboard = () => {
   const theme = useTheme();
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
+
   const userId = import.meta.env.VITE_SNAPTRADE_USER_ID;
   const { isPending, error, data } = useQuery({
     queryKey: ["snapTrade", userId],
@@ -97,12 +100,20 @@ const Dashboard = () => {
     },
     scales: {
       x: {
+        grid: {
+          color: theme.palette.background.paper,
+          lineWidth: 0.3, // Optional: line thickness
+        },
         title: {
           display: true,
           text: "Age",
         },
       },
       y: {
+        grid: {
+          color: theme.palette.background.paper,
+          lineWidth: 0.3, // Optional: line thickness
+        },
         title: {
           display: true,
           text: "Projected Value",
@@ -125,8 +136,8 @@ const Dashboard = () => {
       {
         label: "Value in Today's Dollars",
         data: retirementChartData.map((row) => row.valueInTodaysDollars),
-        borderColor: "rgb(53, 162, 235)",
-        backgroundColor: "rgba(53, 162, 235, 0.5)",
+        borderColor: theme.palette.secondary.main,
+        backgroundColor: theme.palette.secondary.main,
       },
     ],
   };
@@ -159,7 +170,7 @@ const Dashboard = () => {
           </span>
         )}
       </div>
-      <Line options={options} data={chartData} />
+      {!isSmallScreen && <Line options={options} data={chartData} />}
     </main>
   );
 };
