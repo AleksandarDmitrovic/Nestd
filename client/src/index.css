@@ -13,6 +13,14 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+#root {
+  display: flex;
+  flex-direction: column;
+  min-block-size: 100vh;
+  inline-size: 100vw;
+  align-items: center;
+}
+
 a {
   font-weight: 500;
   color: #646cff;

@@ -1,0 +1,44 @@
+main {
+  margin: 1rem;
+  max-inline-size: 60vw;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.title {
+  background-color: #11b981;
+  padding: 1rem;
+  border-radius: 20px;
+  inline-size: fit-content;
+  margin: 1rem;
+}
+
+.total_container {
+  display: flex;
+  flex-direction: column;
+  inline-size: 60vw;
+  background-color: #f3f4f6f1;
+  border: 0.25rem solid #bcbec2;
+  border-radius: 15px;
+  padding: 2rem;
+  margin-block-start: 1rem;
+}
+
+.total_title {
+  color: #888d99;
+}
+
+.total_value {
+  color: black;
+  font-size: 2rem;
+}
+
+.total_subtitle {
+  color: #888d99;
+}
+
+.button {
+  min-inline-size: 60vw;
+  margin-block-start: 1rem;
+}

@@ -1,0 +1,208 @@
+import express from "express";
+import cors from "cors";
+import { Snaptrade } from "snaptrade-typescript-sdk";
+import { loadEnvFile } from "node:process";
+import { connectDB } from "./config/database.ts";
+import User from "./models/User.ts";
+
+loadEnvFile("./.env");
+
+const app = express();
+
+// Middleware
+const corsOptions = { origin: ["http://localhost:5173"] };
+app.use(cors(corsOptions));
+app.use(express.json());
+
+// Connect to MongoDB
+connectDB();
+
+const snaptrade = new Snaptrade({
+  clientId: process.env.SNAPTRADE_CLIENT_ID,
+  consumerKey: process.env.SNAPTRADE_SECRET,
+});
+
+// ============================================
+// USER ROUTES
+// ============================================
+
+// Create a new user
+app.post("/api/addUser", async (req, res) => {
+  try {
+    const { email, firstName, lastName } = req.body;
+
+    // Check if user already exists
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      return res
+        .status(400)
+        .json({ error: "User with this email already exists" });
+    }
+
+    // Create user (UUID will be auto-generated)
+    const user = new User({
+      email,
+      firstName,
+      lastName,
+    });
+
+    await user.save();
+
+    res.status(201).json({
+      message: "User created successfully",
+      user: {
+        id: user._id,
+        email: user.email,
+        firstName: user.firstName,
+        lastName: user.lastName,
+      },
+    });
+  } catch (error: any) {
+    console.error("Error creating user:", error);
+    res
+      .status(500)
+      .json({ error: "Failed to create user", details: error.message });
+  }
+});
+
+// Get user by ID
+app.get("/api/users/:userId", async (req, res) => {
+  try {
+    const { userId } = req.params;
+
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    res.json({
+      id: user._id,
+      email: user.email,
+      firstName: user.firstName,
+      lastName: user.lastName,
+    });
+  } catch (error: any) {
+    console.error("Error fetching user:", error);
+    res
+      .status(500)
+      .json({ error: "Failed to fetch user", details: error.message });
+  }
+});
+
+// ============================================
+// SNAPTRADE ROUTES
+// ============================================
+
+// Generate Connection Portal URL
+app.post("/api/snapTrade/login", async (req, res) => {
+  try {
+    const { userId } = req.body;
+
+    // Get SnapTrade credentials user secret
+    const user = await User.findById(userId);
+    const userSecret = user?.snapTradeUserSecret;
+
+    if (!userSecret) {
+      return res
+        .status(404)
+        .json({ error: "User not registered with SnapTrade" });
+    }
+
+    const result = await snaptrade.authentication.loginSnapTradeUser({
+      userId,
+      userSecret,
+      darkMode: true,
+    });
+
+    res.json(result.data);
+  } catch (error: any) {
+    console.error("Error logging in to SnapTrade:", error);
+    res.status(500).json({
+      error: "Failed to login to SnapTrade",
+      details: error.message,
+    });
+  }
+});
+
+// Register user with SnapTrade
+app.post("/api/snapTrade/registerUser", async (req, res) => {
+  try {
+    const { userId } = req.body;
+
+    // Find user in our database
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    // Check if user already has SnapTrade credentials
+    const existingCredentials = user?.snapTradeUserSecret;
+    if (existingCredentials) {
+      return res
+        .status(400)
+        .json({ error: "User already registered with SnapTrade" });
+    }
+
+    // Register with SnapTrade API using the user's UUID
+    const result = await snaptrade.authentication.registerSnapTradeUser({
+      userId,
+    });
+
+    // Save SnapTrade credentials to database
+    const update = {
+      snapTradeUserSecret: result.data.userSecret,
+    };
+    await User.findByIdAndUpdate(user._id, update);
+
+    res.status(201).json({
+      message: "User registered with SnapTrade successfully",
+      // snapTradeUserId: result.data.userId,
+    });
+  } catch (error: unknown) {
+    console.error("Error registering with SnapTrade:", error);
+    res.status(500).json({
+      error: "Failed to register with SnapTrade",
+      details: error,
+    });
+  }
+});
+
+// Get SnapTrade accounts for a user
+app.get("/api/snapTrade/accounts/:userId", async (req, res) => {
+  try {
+    const { userId } = req.params;
+
+    // Verify user exists
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    // Check snaptrade secret
+    const secret = user.snapTradeUserSecret;
+    if (!secret) {
+      return res.status(404).json({
+        error: "User not registered with SnapTrade",
+      });
+    }
+
+    // Fetch accounts from SnapTrade
+    const result = await snaptrade.accountInformation.listUserAccounts({
+      userId: userId,
+      userSecret: secret,
+    });
+
+    res.json(result.data);
+  } catch (error: any) {
+    console.error("Error fetching SnapTrade accounts:", error);
+    res.status(500).json({
+      error: "Failed to fetch accounts",
+      details: error.message,
+    });
+  }
+});
+
+// Start server
+app.listen(8080, () => {
+  console.log("Server is running on http://localhost:8080");
+});
