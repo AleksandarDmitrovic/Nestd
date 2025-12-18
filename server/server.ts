@@ -93,16 +93,6 @@ app.get("/api/users/:userId", async (req, res) => {
 // SNAPTRADE ROUTES
 // ============================================
 
-app.get("/api", (req, res) => {
-  res.json({
-    accounts: [
-      "Investment Account 1",
-      "Investment Account 2",
-      "Investment Account 3",
-    ],
-  });
-});
-
 // Generate Connection Portal URL
 app.post("/api/snapTrade/login", async (req, res) => {
   try {
