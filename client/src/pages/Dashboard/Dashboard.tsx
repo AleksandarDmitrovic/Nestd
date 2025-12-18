@@ -1,11 +1,37 @@
-import Button from "@mui/material/Button";
+import { useTheme } from "@mui/material/styles";
 import { listSnaptradeAccounts } from "../../api/snaptrade";
-import { calculateInvestmentValue } from "../../helpers/retirementCalaculators";
+
 import { useUserSettings } from "../../providers.tsx/UserSettingsProvider";
 import styles from "./Dashboard.module.css";
 import { useQuery } from "@tanstack/react-query";
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend,
+} from "chart.js";
+import { Line } from "react-chartjs-2";
+import {
+  calculateInvestmentValue,
+  calculateInvestmentValueDetailed,
+} from "../../helpers/retirementCalculators";
+
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend
+);
 
 const Dashboard = () => {
+  const theme = useTheme();
   const userId = import.meta.env.VITE_SNAPTRADE_USER_ID;
   const { isPending, error, data } = useQuery({
     queryKey: ["snapTrade", userId],
@@ -13,7 +39,11 @@ const Dashboard = () => {
   });
 
   const partnerUserId = import.meta.env.VITE_PARTNER_SNAPTRADE_USER_ID;
-  const { data: partnerData } = useQuery({
+  const {
+    isPending: partnerIsPending,
+    error: partnerError,
+    data: partnerData,
+  } = useQuery({
     queryKey: ["snapTrade", partnerUserId],
     queryFn: () => listSnaptradeAccounts(partnerUserId),
   });
@@ -21,9 +51,10 @@ const Dashboard = () => {
   const { settings } = useUserSettings();
   const { currentAge, retirementAge, returnRate, inflationRate } = settings;
 
-  if (isPending) return "Loading...";
+  if (isPending || partnerIsPending) return "Loading...";
 
-  if (error) return "An error has occurred: " + error.message;
+  if (error || partnerError)
+    return "An error has occurred: " + error?.message || partnerError?.message;
 
   const combinedData = data.concat(partnerData);
 
@@ -45,6 +76,46 @@ const Dashboard = () => {
     returnRate,
     inflationRate
   );
+  const retirementChartData = calculateInvestmentValueDetailed(
+    totalBalance,
+    currentAge,
+    retirementAge,
+    returnRate,
+    inflationRate
+  ).yearlyBreakdown;
+
+  const options = {
+    responsive: true,
+    plugins: {
+      legend: {
+        position: "top" as const,
+      },
+      title: {
+        display: true,
+        text: "Retirement Projections",
+      },
+    },
+  };
+
+  const labels = retirementChartData.map((row) => row.age);
+
+  const chartData = {
+    labels,
+    datasets: [
+      {
+        label: "Projected Value",
+        data: retirementChartData.map((row) => row.futureValue),
+        borderColor: theme.palette.primary.main,
+        backgroundColor: theme.palette.primary.main,
+      },
+      {
+        label: "Value in Today's Dollars",
+        data: retirementChartData.map((row) => row.valueInTodaysDollars),
+        borderColor: "rgb(53, 162, 235)",
+        backgroundColor: "rgba(53, 162, 235, 0.5)",
+      },
+    ],
+  };
 
   return (
     <main>
@@ -70,12 +141,7 @@ const Dashboard = () => {
           </span>
         )}
       </div>
-      {/* <div className={styles.chart_container}>
-        <span className={styles.total_title}>Growth Chart</span>
-      </div> */}
-      <Button variant="contained" className={styles.button}>
-        Set Retirement Goal
-      </Button>
+      <Line options={options} data={chartData} />
     </main>
   );
 };

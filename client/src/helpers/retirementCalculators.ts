@@ -53,3 +53,53 @@ export function calculateInvestmentValue(
     yearsOfInvestment,
   };
 }
+
+//  * Alternative version that returns year-by-year breakdown
+//  */
+export function calculateInvestmentValueDetailed(
+  initialInvestment: number,
+  currentAge: number,
+  retirementAge: number,
+  returnRate: number,
+  inflationRate: number
+): {
+  yearlyBreakdown: Array<{
+    year: number;
+    age: number;
+    futureValue: number;
+    valueInTodaysDollars: number;
+  }>;
+  finalValues: InvestmentCalculation;
+} {
+  const yearsOfInvestment = retirementAge - currentAge;
+  const returnRateDecimal = returnRate / 100;
+  const inflationRateDecimal = inflationRate / 100;
+
+  const yearlyBreakdown = [];
+
+  for (let year = 0; year <= yearsOfInvestment; year++) {
+    const age = currentAge + year;
+    const futureValue =
+      initialInvestment * Math.pow(1 + returnRateDecimal, year);
+    const valueInTodaysDollars =
+      futureValue / Math.pow(1 + inflationRateDecimal, year);
+
+    yearlyBreakdown.push({
+      year,
+      age,
+      futureValue: Math.round(futureValue * 100) / 100,
+      valueInTodaysDollars: Math.round(valueInTodaysDollars * 100) / 100,
+    });
+  }
+
+  const finalYear = yearlyBreakdown[yearlyBreakdown.length - 1];
+
+  return {
+    yearlyBreakdown,
+    finalValues: {
+      futureValue: finalYear.futureValue,
+      valueInTodaysDollars: finalYear.valueInTodaysDollars,
+      yearsOfInvestment,
+    },
+  };
+}
