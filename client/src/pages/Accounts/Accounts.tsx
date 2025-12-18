@@ -65,7 +65,7 @@ const Accounts = () => {
               <Typography
                 display="flex"
                 alignSelf="center"
-                variant="h3"
+                variant="h4"
                 color="textSecondary"
               >
                 {account?.institution_name}
