@@ -20,10 +20,10 @@ const ConnectBrokerage: React.FC<ConnectBrokerageProps> = ({
       body: JSON.stringify({ userId: import.meta.env.VITE_SNAPTRADE_USER_ID }),
     });
 
-    console.log("response :", response);
+    // console.log("response :", response);
 
     const data = await response.json();
-    console.log("data :", data);
+    // console.log("data :", data);
     const link = data.redirectURI;
 
     // update the state with the generated link

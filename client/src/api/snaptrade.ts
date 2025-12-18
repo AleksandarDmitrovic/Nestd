@@ -11,8 +11,8 @@ export const registerSnaptradeUser = async (userId: string) => {
       }
     );
 
-    const data = await response.json();
-    console.log("Snaptrade user registered:", data);
+    // const data = await response.json();
+    // console.log("Snaptrade user registered:", data);
   } catch (error) {
     console.error("Error registering Snaptrade user:", error);
   }

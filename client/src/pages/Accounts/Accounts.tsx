@@ -40,12 +40,9 @@ const Accounts = () => {
 
   if (error || data.error)
     return "An error has occurred: " + data?.error || error?.message;
-  console.log("error :", error);
-
-  console.log("data :", data);
 
   const invalidateCacheAccountData = () => {
-    console.log("Invalidating snapTrade account data cache");
+    // console.log("Invalidating snapTrade account data cache");
     queryClient.invalidateQueries({ queryKey: ["snapTrade"] });
   };
 
